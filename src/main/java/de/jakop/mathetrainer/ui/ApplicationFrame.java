@@ -3,78 +3,87 @@
  */
 package de.jakop.mathetrainer.ui;
 
-import static de.jakop.mathetrainer.configuration.Operation.ADDITION;
-import static de.jakop.mathetrainer.configuration.Operation.MULTIPLICATION;
-import static de.jakop.mathetrainer.configuration.Operation.SUBTRACTION;
-
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.google.common.base.Stopwatch;
+
 import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.configuration.Operation;
+import de.jakop.mathetrainer.logic.Exercise;
+import de.jakop.mathetrainer.logic.ExerciseGenerator;
+import de.jakop.mathetrainer.logic.Model;
 
 public class ApplicationFrame extends JFrame {
 
-	private final class OperationSelectionItemListener implements ItemListener {
-		private final Operation operation;
 
-		public OperationSelectionItemListener(final Operation operation) {
-			this.operation = operation;
-		}
-
-		@Override
-		public void itemStateChanged(final ItemEvent e) {
-			if (e.getStateChange() == ItemEvent.SELECTED) {
-				configuration.enableOperation(operation);
-			} else {
-				configuration.disableOperation(operation);
-			}
-		}
-	}
+	// TODO --> Configuration
+	private static final float FONT_SIZE = 32.0f;
+	private static final Font HISTORY_FONT = new Font("Courier", Font.PLAIN, 14);
 
 	private static final long serialVersionUID = 3549123919945092574L;
-	private final Configuration configuration;
+	private final ExerciseGenerator generator;
 	private final JLabel outputField;
+	private final Model model;
+	private final JTextArea history;
+	private final Stopwatch stopwatch;
+	private final Configuration configuration;
 
-	public ApplicationFrame(final Configuration configuration) {
+	public ApplicationFrame(final Configuration configuration, final ExerciseGenerator generator, final Model model) {
 		this.configuration = configuration;
-		outputField = new JLabel("out");
+		this.generator = generator;
+		this.model = model;
+		stopwatch = Stopwatch.createUnstarted();
+
+		outputField = new JLabel();
+		history = new JTextArea();
+		history.setEditable(false);
+		history.setFont(HISTORY_FONT);
+		final JScrollPane historyScroll = new JScrollPane(history);
 
 		setLayout(new GridBagLayout());
 		final GridBagConstraints gbc = createDefaultGbC();
 		gbc.weightx = 1.0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weighty = 0.0;
-		getContentPane().add(createConfiguration(), gbc);
+		getContentPane().add(new ConfigurationPanel(configuration), gbc);
 		gbc.gridy++;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
-		getContentPane().add(createHistory(), gbc);
+		getContentPane().add(historyScroll, gbc);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy++;
 		gbc.weighty = 0.0;
 		getContentPane().add(createInput(), gbc);
 
+		nextExercise();
 	}
 
 	private Component createInput() {
 		final JPanel inputPanel = new JPanel(new GridBagLayout());
 		final GridBagConstraints gbc = createDefaultGbC();
 
-		final JTextField inputField = new JTextField("in");
-		final JButton submit = new JButton("Ok");
+		final JTextField inputField = new JTextField();
+
+		final JButton submit = new JButton("OK");
+		getRootPane().setDefaultButton(submit);
+
+		submit.addActionListener(e -> {
+			solve(inputField.getText());
+			inputField.setText(null);
+			inputField.requestFocus();
+		});
 
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
@@ -88,41 +97,40 @@ public class ApplicationFrame extends JFrame {
 		gbc.gridx++;
 		gbc.weightx = 0.0;
 		inputPanel.add(submit, gbc);
+
+		inputField.setFont(inputField.getFont().deriveFont(FONT_SIZE));
+		outputField.setFont(outputField.getFont().deriveFont(FONT_SIZE));
+		submit.setFont(submit.getFont().deriveFont(FONT_SIZE));
+
+
 		return inputPanel;
 	}
 
-	private Component createHistory() {
-		return new JTextArea("History");
+	private void nextExercise() {
+		model.setCurrentExercise(generator.get());
+		outputField.setText(model.getCurrentExercise().getText());
+		stopwatch.start();
 	}
 
-	private Component createConfiguration() {
-		final JPanel configurationPanel = new JPanel(new GridBagLayout());
-		final GridBagConstraints gbc = createDefaultGbC();
+	private void solve(final String solution) {
+		stopwatch.stop();
+		final Exercise exercise = model.getCurrentExercise();
+		exercise.setSolution(solution);
+		exercise.setSolutionTimeInSeconds(stopwatch.elapsed(TimeUnit.SECONDS));
+		stopwatch.reset();
+		recordHistory(exercise);
+		nextExercise();
+	}
 
-		final JCheckBox addition = new JCheckBox("Addition");
-		final JCheckBox subtraction = new JCheckBox("Subtraktion");
-		final JCheckBox multiplication = new JCheckBox("Multiplikation");
-		final JLabel dummy = new JLabel();
-
-		configurationPanel.add(addition, gbc);
-		gbc.gridx++;
-		configurationPanel.add(subtraction, gbc);
-		gbc.gridx++;
-		configurationPanel.add(multiplication, gbc);
-		gbc.gridx++;
-		gbc.weightx = 1.0;
-		configurationPanel.add(dummy, gbc);
-
-		addition.addItemListener(new OperationSelectionItemListener(ADDITION));
-		subtraction.addItemListener(new OperationSelectionItemListener(SUBTRACTION));
-		multiplication.addItemListener(new OperationSelectionItemListener(MULTIPLICATION));
-
-		return configurationPanel;
+	private void recordHistory(final Exercise exercise) {
+		final int maxWidth = configuration.getOperandCount() * (int) (Math.log10(configuration.getOperandMaxValue()) + 1) + configuration.getOperandCount();
+		final String correctness = exercise.isCorrect() ? "Korrekt!" : "Leider falsch.";
+		history.append(String.format("%-" + maxWidth + "s (%3ds) %s%n", exercise.getText(), exercise.getSolutionTimeInSeconds(), correctness));
+		history.setCaretPosition(history.getDocument().getLength());
 	}
 
 	private GridBagConstraints createDefaultGbC() {
 		return new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
 	}
-
 
 }

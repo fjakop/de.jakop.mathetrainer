@@ -62,12 +62,12 @@ public class ExerciseGenerator implements Supplier<Exercise> {
 	}
 
 	private Operation getOperator() {
-		final int operatorIndex = (int) (Math.random() * configuration.getOperationModes().size());
-		final Operation operator = Operation.values()[operatorIndex];
+		final int operatorIndex = (int) (Math.random() * configuration.getOperationModes().length);
+		final Operation operator = configuration.getOperationModes()[operatorIndex];
 		return operator;
 	}
 
 	private int getOperand() {
-		return (int) (Math.random() * configuration.getMaxOperand() + 1);
+		return (int) (Math.random() * configuration.getOperandMaxValue() + 1);
 	}
 }

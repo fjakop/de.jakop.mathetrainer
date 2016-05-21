@@ -26,29 +26,28 @@ package de.jakop.mathetrainer;
 import javax.swing.WindowConstants;
 
 import de.jakop.mathetrainer.configuration.Configuration;
+import de.jakop.mathetrainer.logic.ExerciseGenerator;
+import de.jakop.mathetrainer.logic.Model;
 import de.jakop.mathetrainer.ui.ApplicationFrame;
 
 public class Application {
 
-	public static void main(final String[] args) {
-
+	public Application() {
 		final Configuration configuration = new Configuration();
+		final ExerciseGenerator generator = new ExerciseGenerator(configuration);
 
-		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration);
+		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration, generator, new Model());
 		applicationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		applicationFrame.pack();
+		applicationFrame.setSize(600, 700);
 		applicationFrame.setVisible(true);
 
-		//		final Consumer<String> output = new CliOutput();
-		//		final Supplier<String> input = new CliInput();
-		//		final ExerciseGenerator generator = new ExerciseGenerator(configuration);
-		//
-		//		while (true) {
-		//			final Exercise exercise = generator.get();
-		//			output.accept(exercise.getText());
-		//			final String solution = input.get();
-		//			final String message = exercise.isCorrect(solution) ? "Korrekt!" : "Leider falsch...";
-		//			output.accept(message);
-		//		}
+		//		controller.nextExercise();
+		//		final CliInput input = new CliInput(controller);
+		//		input.addObserver(inputObserver);
+	}
+
+	public static void main(final String[] args) {
+		new Application();
 	}
 }

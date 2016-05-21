@@ -28,7 +28,6 @@ import static de.jakop.mathetrainer.configuration.Operation.MULTIPLICATION;
 import static de.jakop.mathetrainer.configuration.Operation.SUBTRACTION;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import com.google.common.collect.Sets;
 
@@ -42,8 +41,8 @@ public class Configuration {
 		modes = Sets.newHashSet(ADDITION, SUBTRACTION, MULTIPLICATION);
 	}
 
-	public Collection<Operation> getOperationModes() {
-		return Collections.unmodifiableCollection(modes);
+	public Operation[] getOperationModes() {
+		return modes.toArray(new Operation[0]);
 	}
 
 	public int getOperandCount() {
@@ -53,12 +52,21 @@ public class Configuration {
 		return operandCount;
 	}
 
-	public int getMaxOperand() {
+	public void setOperandCount(final int value) {
+		operandCount = value;
+	}
+
+	public int getOperandMaxValue() {
 		if (operandMaxvalue == 0) {
 			operandMaxvalue = Integer.valueOf(System.getProperty("operand.maxvalue", "10"));
 		}
 		return operandMaxvalue;
 	}
+
+	public void setOperandMaxValue(final int value) {
+		operandMaxvalue = value;
+	}
+
 
 	public void enableOperation(final Operation operator) {
 		modes.add(operator);
@@ -67,6 +75,12 @@ public class Configuration {
 	public void disableOperation(final Operation operator) {
 		modes.remove(operator);
 	}
+
+	public boolean isOperationEnabled(final Operation operator) {
+		return modes.contains(operator);
+	}
+
+
 
 
 

@@ -21,25 +21,18 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.logic;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+public class Model {
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Supplier;
+	private Exercise currentExercise;
 
-public class CliInput implements Supplier<String> {
-
-	@Override
-	public String get() {
-		final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, Charsets.UTF_8));
-		try {
-			final String line = reader.readLine();
-			return line;
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
+	public Exercise getCurrentExercise() {
+		return currentExercise;
 	}
+
+	public void setCurrentExercise(final Exercise currentExercise) {
+		this.currentExercise = currentExercise;
+	}
+
 }

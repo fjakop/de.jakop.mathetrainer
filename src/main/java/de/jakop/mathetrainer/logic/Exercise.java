@@ -28,6 +28,9 @@ public class Exercise {
 	private final String text;
 	private final int expected;
 
+	private String solution;
+	private long solutionTimeInSeconds;
+
 	public Exercise(final String text, final int expected) {
 		this.text = text;
 		this.expected = expected;
@@ -37,8 +40,28 @@ public class Exercise {
 		return text;
 	}
 
-	public boolean isCorrect(final String solution) {
-		final int value = Integer.parseInt(solution.trim());
-		return value == expected;
+	public boolean isCorrect() {
+		try {
+			final int value = Integer.parseInt(solution);
+			return value == expected;
+		} catch (final NumberFormatException e) {
+			return false;
+		}
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(final String solution) {
+		this.solution = solution.trim();
+	}
+
+	public long getSolutionTimeInSeconds() {
+		return solutionTimeInSeconds;
+	}
+
+	public void setSolutionTimeInSeconds(final long timeInMillis) {
+		solutionTimeInSeconds = timeInMillis;
 	}
 }

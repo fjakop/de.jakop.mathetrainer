@@ -21,15 +21,27 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.observer;
 
-import java.util.function.Consumer;
 
-public class CliOutput implements Consumer<String> {
+/**
+ * A generic version of Java's {@link java.util.Observable}
+ * @param <OBSERVABLE>
+ * @param <DATA>
+ */
+public interface Observer<OBSERVABLE, DATA> {
 
-	@Override
-	public void accept(final String value) {
-		System.out.println(value);
-	};
+	/**
+	 * This method is called whenever the observed object is changed. An
+	 * application calls an <tt>Observable</tt> object's
+	 * <code>notifyObservers</code> method to have all the object's
+	 * observers notified of the change.
+	 *
+	 * @param   observable     the observable object.
+	 * @param   data   an argument passed to the <code>notifyObservers</code>
+	 *                 method.
+	 */
+	void update(Observable<OBSERVABLE, DATA> observable, DATA data);
+
 
 }
