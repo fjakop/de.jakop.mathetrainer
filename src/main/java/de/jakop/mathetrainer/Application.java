@@ -23,31 +23,32 @@
 
 package de.jakop.mathetrainer;
 
-import java.util.function.Consumer;
-
-import com.google.common.base.Supplier;
+import javax.swing.WindowConstants;
 
 import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Exercise;
-import de.jakop.mathetrainer.logic.ExerciseGenerator;
-import de.jakop.mathetrainer.ui.CliInput;
-import de.jakop.mathetrainer.ui.CliOutput;
+import de.jakop.mathetrainer.ui.ApplicationFrame;
 
 public class Application {
 
 	public static void main(final String[] args) {
 
 		final Configuration configuration = new Configuration();
-		final Consumer<String> output = new CliOutput();
-		final Supplier<String> input = new CliInput();
-		final ExerciseGenerator generator = new ExerciseGenerator(configuration);
 
-		while (true) {
-			final Exercise exercise = generator.get();
-			output.accept(exercise.getText());
-			final String solution = input.get();
-			final String message = exercise.isCorrect(solution) ? "Korrekt!" : "Leider falsch...";
-			output.accept(message);
-		}
+		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration);
+		applicationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		applicationFrame.pack();
+		applicationFrame.setVisible(true);
+
+		//		final Consumer<String> output = new CliOutput();
+		//		final Supplier<String> input = new CliInput();
+		//		final ExerciseGenerator generator = new ExerciseGenerator(configuration);
+		//
+		//		while (true) {
+		//			final Exercise exercise = generator.get();
+		//			output.accept(exercise.getText());
+		//			final String solution = input.get();
+		//			final String message = exercise.isCorrect(solution) ? "Korrekt!" : "Leider falsch...";
+		//			output.accept(message);
+		//		}
 	}
 }

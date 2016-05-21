@@ -23,26 +23,26 @@
 
 package de.jakop.mathetrainer.configuration;
 
-import static de.jakop.mathetrainer.configuration.Operator.ADD;
-import static de.jakop.mathetrainer.configuration.Operator.MULTIPLY;
-import static de.jakop.mathetrainer.configuration.Operator.SUBTRACT;
+import static de.jakop.mathetrainer.configuration.Operation.ADDITION;
+import static de.jakop.mathetrainer.configuration.Operation.MULTIPLICATION;
+import static de.jakop.mathetrainer.configuration.Operation.SUBTRACTION;
 
 import java.util.Collection;
 import java.util.Collections;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class Configuration {
 
-	private final Collection<Operator> modes;
+	private final Collection<Operation> modes;
 	private int operandMaxvalue;
 	private int operandCount;
 
 	public Configuration() {
-		modes = Lists.newArrayList(ADD, SUBTRACT, MULTIPLY);
+		modes = Sets.newHashSet(ADDITION, SUBTRACTION, MULTIPLICATION);
 	}
 
-	public Collection<Operator> getOperationModes() {
+	public Collection<Operation> getOperationModes() {
 		return Collections.unmodifiableCollection(modes);
 	}
 
@@ -60,6 +60,13 @@ public class Configuration {
 		return operandMaxvalue;
 	}
 
+	public void enableOperation(final Operation operator) {
+		modes.add(operator);
+	}
+
+	public void disableOperation(final Operation operator) {
+		modes.remove(operator);
+	}
 
 
 

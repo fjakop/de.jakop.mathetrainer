@@ -29,7 +29,7 @@ import com.google.code.mathparser.parser.calculation.Result;
 import com.google.common.base.Supplier;
 
 import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.configuration.Operator;
+import de.jakop.mathetrainer.configuration.Operation;
 
 public class ExerciseGenerator implements Supplier<Exercise> {
 
@@ -61,9 +61,9 @@ public class ExerciseGenerator implements Supplier<Exercise> {
 		return new Exercise(expression, result.doubleValue().intValue());
 	}
 
-	private Operator getOperator() {
+	private Operation getOperator() {
 		final int operatorIndex = (int) (Math.random() * configuration.getOperationModes().size());
-		final Operator operator = Operator.values()[operatorIndex];
+		final Operation operator = Operation.values()[operatorIndex];
 		return operator;
 	}
 

@@ -23,15 +23,15 @@
 
 package de.jakop.mathetrainer.configuration;
 
-public enum Operator {
-	ADD("+"), //
-	SUBTRACT("-"), //
-	MULTIPLY("*"), //
-	DIVIDE("/");
+public enum Operation {
+	ADDITION("+"), //
+	SUBTRACTION("-"), //
+	MULTIPLICATION("*"), //
+	DIVISION("/");
 
 	private final String symbol;
 
-	private Operator(final String symbol) {
+	private Operation(final String symbol) {
 		this.symbol = symbol;
 	}
 
