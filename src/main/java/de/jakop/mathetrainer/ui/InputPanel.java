@@ -27,34 +27,65 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import com.google.common.eventbus.Subscribe;
 
 import de.jakop.mathetrainer.configuration.Configuration;
 import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.Model;
+import de.jakop.mathetrainer.logic.NewExerciseEvent;
 
-public class ApplicationFrame extends JFrame {
+public class InputPanel extends JPanel {
 
-	private static final long serialVersionUID = 3549123919945092574L;
+	private static final long serialVersionUID = -9127376372672751029L;
 
-	public ApplicationFrame(final Configuration configuration, final Model model, final Controller controller, final InputPanel inputPanel, final HistoryPanel historyPanel) {
+	private final JLabel outputField;
+	private final JButton submit;
+
+
+	public InputPanel(final Controller controller) {
 
 		setLayout(new GridBagLayout());
-		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weighty = 0.0;
-		getContentPane().add(new ConfigurationPanel(configuration), gbc);
-		gbc.gridy++;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		getContentPane().add(historyPanel, gbc);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy++;
-		gbc.weighty = 0.0;
-		getContentPane().add(inputPanel, gbc);
+		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
 
-		getRootPane().setDefaultButton(inputPanel.getSubmitButton());
+		outputField = new JLabel("foo");
+		final JTextField inputField = new JTextField();
+
+		submit = new JButton("OK");
+
+		getSubmitButton().addActionListener(e -> {
+			controller.solve(inputField.getText());
+			inputField.setText(null);
+			inputField.requestFocus();
+		});
+
+		gbc.weightx = 1.0;
+		add(outputField, gbc);
+
+		inputField.setColumns(8);
+		gbc.gridx++;
+		gbc.weightx = 0.0;
+		add(inputField, gbc);
+
+		gbc.gridx++;
+		gbc.weightx = 0.0;
+		add(getSubmitButton(), gbc);
+
+		inputField.setFont(inputField.getFont().deriveFont(Configuration.FONT_SIZE));
+		outputField.setFont(outputField.getFont().deriveFont(Configuration.FONT_SIZE));
+		getSubmitButton().setFont(getSubmitButton().getFont().deriveFont(Configuration.FONT_SIZE));
+
 	}
 
+	public JButton getSubmitButton() {
+		return submit;
+	}
+
+	@Subscribe
+	public void newExercise(final NewExerciseEvent event) {
+		outputField.setText(event.getExercise().getText());
+	}
 }

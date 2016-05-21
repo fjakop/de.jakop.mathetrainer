@@ -21,40 +21,17 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.logic;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+public class NewExerciseEvent {
 
-import javax.swing.JFrame;
+	private final Exercise exercise;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.Model;
-
-public class ApplicationFrame extends JFrame {
-
-	private static final long serialVersionUID = 3549123919945092574L;
-
-	public ApplicationFrame(final Configuration configuration, final Model model, final Controller controller, final InputPanel inputPanel, final HistoryPanel historyPanel) {
-
-		setLayout(new GridBagLayout());
-		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weighty = 0.0;
-		getContentPane().add(new ConfigurationPanel(configuration), gbc);
-		gbc.gridy++;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		getContentPane().add(historyPanel, gbc);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy++;
-		gbc.weighty = 0.0;
-		getContentPane().add(inputPanel, gbc);
-
-		getRootPane().setDefaultButton(inputPanel.getSubmitButton());
+	public NewExerciseEvent(final Exercise exercise) {
+		this.exercise = exercise;
 	}
 
+	public Exercise getExercise() {
+		return exercise;
+	}
 }
