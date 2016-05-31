@@ -83,4 +83,8 @@ public class Configuration {
 	public boolean isOperationEnabled(final Operation operator) {
 		return modes.contains(operator);
 	}
+
+	public long getSolutionTime() {
+		return 1000 * 10;
+	}
 }

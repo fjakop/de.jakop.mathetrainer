@@ -26,66 +26,70 @@ package de.jakop.mathetrainer.ui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import com.google.common.eventbus.Subscribe;
+import javax.swing.JProgressBar;
 
 import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.NewExerciseEvent;
 
-public class InputPanel extends JPanel {
+public class TimeBarPanel extends JPanel {
 
-	private static final long serialVersionUID = -9127376372672751029L;
+	private static final long serialVersionUID = -5556349924632311259L;
 
-	private final JLabel outputField;
-	private final JButton submit;
+	private final Timer timer;
+	private final long delay;
+	private final Configuration configuration;
+	private final JProgressBar progressBar;
 
+	public TimeBarPanel(final Configuration configuration) {
 
-	public InputPanel(final Controller controller) {
+		this.configuration = configuration;
+		delay = 75;
+		timer = new Timer(true);
 
 		setLayout(new GridBagLayout());
-		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.BASELINE, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
 
-		outputField = new JLabel("foo");
-		final JTextField inputField = new JTextField();
-
-		submit = new JButton("OK");
-
-		getSubmitButton().addActionListener(e -> {
-			controller.solve(inputField.getText());
-			inputField.setText(null);
-			inputField.requestFocus();
-		});
-
-		gbc.weightx = 1.0;
-		add(outputField, gbc);
-
-		inputField.setColumns(8);
-		gbc.gridx++;
-		gbc.weightx = 0.0;
-		add(inputField, gbc);
-
-		gbc.gridx++;
-		gbc.weightx = 0.0;
-		add(getSubmitButton(), gbc);
-
-		inputField.setFont(inputField.getFont().deriveFont(Configuration.FONT_SIZE));
-		outputField.setFont(outputField.getFont().deriveFont(Configuration.FONT_SIZE));
-		getSubmitButton().setFont(getSubmitButton().getFont().deriveFont(Configuration.FONT_SIZE));
-
+		progressBar = new JProgressBar(0, 100);
+		add(progressBar, gbc);
 	}
 
-	public JButton getSubmitButton() {
-		return submit;
+	public void start() {
+		timer.scheduleAtFixedRate(new TimerListener(delay, configuration.getSolutionTime(), progressBar), 0, delay);
 	}
 
-	@Subscribe
-	public void newExercise(final NewExerciseEvent event) {
-		outputField.setText(event.getExercise().getText());
+	public void stop() {
+		timer.cancel();
 	}
+
+	public void reset() {
+		progressBar.setValue(0);
+	}
+
+	private class TimerListener extends TimerTask {
+
+		private final JProgressBar progressBar;
+		private final long maxTimeMs;
+		private final long delay;
+		private long elapsedMs;
+
+		public TimerListener(final long delay, final long maxTimeMs, final JProgressBar progressBar) {
+			this.delay = delay;
+			this.maxTimeMs = maxTimeMs;
+			this.progressBar = progressBar;
+		}
+
+		@Override
+		public void run() {
+			elapsedMs += delay;
+			progressBar.setValue((int) ((double) elapsedMs / (double) maxTimeMs * 100));
+			if (elapsedMs >= maxTimeMs) {
+				stop();
+			}
+		}
+	}
+
+
 }

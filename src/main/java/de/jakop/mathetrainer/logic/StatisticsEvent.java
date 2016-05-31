@@ -27,7 +27,7 @@ public class StatisticsEvent {
 
 	private final String text;
 
-	public StatisticsEvent(final String text) {
+	StatisticsEvent(final String text) {
 		this.text = text;
 	}
 

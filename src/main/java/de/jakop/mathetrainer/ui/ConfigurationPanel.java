@@ -44,7 +44,7 @@ import javax.swing.SpinnerNumberModel;
 import de.jakop.mathetrainer.configuration.Configuration;
 import de.jakop.mathetrainer.configuration.Operation;
 
-public class ConfigurationPanel extends JPanel {
+class ConfigurationPanel extends JPanel {
 
 	private static final long serialVersionUID = -168145045627837738L;
 

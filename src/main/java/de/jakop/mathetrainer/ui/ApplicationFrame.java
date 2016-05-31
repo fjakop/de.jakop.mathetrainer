@@ -37,7 +37,10 @@ public class ApplicationFrame extends JFrame {
 
 	private static final long serialVersionUID = 3549123919945092574L;
 
-	public ApplicationFrame(final Configuration configuration, final Model model, final Controller controller, final InputPanel inputPanel, final HistoryPanel historyPanel) {
+	public ApplicationFrame(//
+			final Configuration configuration, final Model model, //
+			final Controller controller, //
+			final InputPanel inputPanel, final HistoryPanel historyPanel, final TimeBarPanel timeBarPanel) {
 
 		setLayout(new GridBagLayout());
 		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
@@ -49,9 +52,13 @@ public class ApplicationFrame extends JFrame {
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.BOTH;
 		getContentPane().add(historyPanel, gbc);
+
+		gbc.weighty = 0.0;
+		gbc.gridy++;
+		getContentPane().add(timeBarPanel, gbc);
+
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridy++;
-		gbc.weighty = 0.0;
 		getContentPane().add(inputPanel, gbc);
 
 		getRootPane().setDefaultButton(inputPanel.getSubmitButton());

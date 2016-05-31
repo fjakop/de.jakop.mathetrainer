@@ -34,6 +34,7 @@ import de.jakop.mathetrainer.logic.Model;
 import de.jakop.mathetrainer.ui.ApplicationFrame;
 import de.jakop.mathetrainer.ui.HistoryPanel;
 import de.jakop.mathetrainer.ui.InputPanel;
+import de.jakop.mathetrainer.ui.TimeBarPanel;
 
 public class Application {
 
@@ -46,7 +47,8 @@ public class Application {
 
 		final HistoryPanel historyPanel = new HistoryPanel(configuration);
 		final InputPanel inputPanel = new InputPanel(controller);
-		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration, model, controller, inputPanel, historyPanel);
+		final TimeBarPanel timeBarPanel = new TimeBarPanel(configuration);
+		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration, model, controller, inputPanel, historyPanel, timeBarPanel);
 
 		eventBus.register(historyPanel);
 		eventBus.register(inputPanel);

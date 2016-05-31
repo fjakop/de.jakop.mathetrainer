@@ -27,7 +27,7 @@ public class SolutionEvent {
 
 	private final Exercise exercise;
 
-	public SolutionEvent(final Exercise exercise) {
+	SolutionEvent(final Exercise exercise) {
 		this.exercise = exercise;
 	}
 

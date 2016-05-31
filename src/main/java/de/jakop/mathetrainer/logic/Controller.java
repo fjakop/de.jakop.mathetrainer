@@ -52,7 +52,7 @@ public class Controller {
 		exercise.getStopwatch().start();
 	}
 
-	public void recordHistory(final Exercise exercise) {
+	private void recordHistory(final Exercise exercise) {
 		model.addExercise(exercise);
 		eventBus.post(new SolutionEvent(exercise));
 		if (model.getExercisesCount() % 10 == 0) {
