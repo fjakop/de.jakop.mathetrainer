@@ -21,17 +21,17 @@
  * SOFTWARE.
  */
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.common.ui;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.google.common.eventbus.Subscribe;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Exercise;
-import de.jakop.mathetrainer.logic.SolutionEvent;
-import de.jakop.mathetrainer.logic.StatisticsEvent;
+import de.jakop.mathetrainer.common.configuration.Configuration;
+import de.jakop.mathetrainer.common.logic.Exercise;
+import de.jakop.mathetrainer.common.logic.SolutionEvent;
+import de.jakop.mathetrainer.common.logic.StatisticsEvent;
 
 public class HistoryPanel extends JScrollPane {
 
@@ -45,7 +45,7 @@ public class HistoryPanel extends JScrollPane {
 		this.configuration = configuration;
 		history = new JTextArea();
 		history.setEditable(false);
-		history.setFont(Configuration.HISTORY_FONT);
+		history.setFont(de.jakop.mathetrainer.common.configuration.Configuration.HISTORY_FONT);
 		setViewportView(history);
 	}
 

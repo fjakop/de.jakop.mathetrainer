@@ -21,7 +21,7 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.common.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,9 +34,9 @@ import javax.swing.JTextField;
 
 import com.google.common.eventbus.Subscribe;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.NewExerciseEvent;
+import de.jakop.mathetrainer.common.configuration.Configuration;
+import de.jakop.mathetrainer.common.logic.Controller;
+import de.jakop.mathetrainer.common.logic.NewExerciseEvent;
 
 public class InputPanel extends JPanel {
 

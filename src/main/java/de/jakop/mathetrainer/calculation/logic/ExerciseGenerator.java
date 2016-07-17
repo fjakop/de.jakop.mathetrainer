@@ -21,15 +21,16 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.calculation.logic;
 
 import com.google.code.mathparser.MathParser;
 import com.google.code.mathparser.MathParserFactory;
 import com.google.code.mathparser.parser.calculation.Result;
 import com.google.common.base.Supplier;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.configuration.Operation;
+import de.jakop.mathetrainer.calculation.configuration.Configuration;
+import de.jakop.mathetrainer.common.configuration.Operation;
+import de.jakop.mathetrainer.common.logic.Exercise;
 
 public class ExerciseGenerator implements Supplier<Exercise> {
 

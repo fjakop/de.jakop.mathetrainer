@@ -21,7 +21,7 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.configuration;
+package de.jakop.mathetrainer.common.configuration;
 
 public enum Operation {
 	ADDITION("+"), //

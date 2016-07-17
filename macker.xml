@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<macker>
+<!-- 	<macker xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="macker.xsd"> -->
+	<ruleset name="Classes in common package can only access common packages.">
+		<access-rule severity="error">
+			<deny>
+				<from>
+					<include class="de.jakop.mathetrainer.common.**" />
+				</from>
+				<to>
+					<include class="de.jakop.mathetrainer.calculation.**" />
+					<include class="de.jakop.mathetrainer.Application" />
+				</to>
+			</deny>
+		</access-rule>
+	</ruleset>
+	<ruleset name="Classes in special package can only access common or own packages.">
+		<access-rule severity="error">
+			<deny>
+				<from>
+					<include class="de.jakop.mathetrainer.calculation.**" />
+				</from>
+				<to>
+					<include class="de.jakop.mathetrainer.einmaleins.**" />
+					<include class="de.jakop.mathetrainer.Application" />
+				</to>
+			</deny>
+			<deny>
+				<from>
+					<include class="de.jakop.mathetrainer.einmaleins.**" />
+				</from>
+				<to>
+					<include class="de.jakop.mathetrainer.calculation.**" />
+					<include class="de.jakop.mathetrainer.Application" />
+				</to>
+			</deny>
+		</access-rule>
+	</ruleset>
+</macker>

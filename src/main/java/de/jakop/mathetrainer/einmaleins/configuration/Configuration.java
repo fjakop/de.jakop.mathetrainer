@@ -21,18 +21,42 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.einmaleins.configuration;
 
-public class StatisticsEvent {
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-	private final String text;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
-	public StatisticsEvent(final String text) {
-		this.text = text;
+public class Configuration extends de.jakop.mathetrainer.common.configuration.Configuration {
+
+	private static final String EINMALEINS_ROWS = "einmaleins.rows";
+
+	private final Set<Integer> sequences = Sets.newHashSet();
+
+	public Configuration() {
+		setOperandCount(2);
+		setOperandMaxValue(12);
+		final String rowsParameter = System.getProperty(EINMALEINS_ROWS, "1,2,3");
+		final List<String> rowList = Splitter.on(",").trimResults().splitToList(rowsParameter);
+		final List<Integer> rows = rowList.stream().mapToInt(Integer::valueOf).boxed().collect(Collectors.toList());
+		sequences.addAll(rows);
 	}
 
-	public String getText() {
-		return text;
+	public void setSequence(final int sequence, final boolean enabled) {
+		if (enabled) {
+			sequences.add(sequence);
+		} else {
+			sequences.remove(sequence);
+		}
+	}
+
+	public Collection<Integer> getSequences() {
+		return ImmutableSet.copyOf(sequences);
 	}
 
 }

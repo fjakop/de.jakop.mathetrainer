@@ -21,52 +21,17 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.common.logic;
 
-import java.util.concurrent.TimeUnit;
+public class NewExerciseEvent {
 
-import com.google.common.base.Stopwatch;
+	private final Exercise exercise;
 
-public class Exercise {
-
-	private final String text;
-	private final int expected;
-
-	private String solution;
-	private final Stopwatch stopwatch;
-
-	public Exercise(final String text, final int expected) {
-		this.text = text;
-		this.expected = expected;
-		stopwatch = Stopwatch.createUnstarted();
+	public NewExerciseEvent(final Exercise exercise) {
+		this.exercise = exercise;
 	}
 
-	public String getText() {
-		return text;
-	}
-
-	public boolean isCorrect() {
-		try {
-			final int value = Integer.parseInt(solution);
-			return value == expected;
-		} catch (final NumberFormatException e) {
-			return false;
-		}
-	}
-
-	public String getSolution() {
-		return solution;
-	}
-
-	public void setSolution(final String solution) {
-		this.solution = solution.trim();
-	}
-
-	public long getSolutionTimeInSeconds() {
-		return stopwatch.elapsed(TimeUnit.SECONDS);
-	}
-
-	public Stopwatch getStopwatch() {
-		return stopwatch;
+	public Exercise getExercise() {
+		return exercise;
 	}
 }

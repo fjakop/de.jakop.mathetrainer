@@ -21,40 +21,22 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.common;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.JPanel;
 
-import javax.swing.JFrame;
+import com.google.common.base.Supplier;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.Model;
+import de.jakop.mathetrainer.common.configuration.Configuration;
+import de.jakop.mathetrainer.common.logic.Exercise;
 
-public class ApplicationFrame extends JFrame {
 
-	private static final long serialVersionUID = 3549123919945092574L;
+public interface ObjectFactory {
 
-	public ApplicationFrame(final Configuration configuration, final Model model, final Controller controller, final InputPanel inputPanel, final HistoryPanel historyPanel) {
+	Configuration getConfiguration();
 
-		setLayout(new GridBagLayout());
-		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
-		gbc.weightx = 1.0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weighty = 0.0;
-		getContentPane().add(new ConfigurationPanel(configuration), gbc);
-		gbc.gridy++;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		getContentPane().add(historyPanel, gbc);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy++;
-		gbc.weighty = 0.0;
-		getContentPane().add(inputPanel, gbc);
+	Supplier<Exercise> getExerciseGenerator();
 
-		getRootPane().setDefaultButton(inputPanel.getSubmitButton());
-	}
+	JPanel getConfigurationPanel();
 
 }

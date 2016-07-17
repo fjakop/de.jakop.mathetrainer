@@ -21,11 +21,11 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.ui;
+package de.jakop.mathetrainer.calculation.ui;
 
-import static de.jakop.mathetrainer.configuration.Operation.ADDITION;
-import static de.jakop.mathetrainer.configuration.Operation.MULTIPLICATION;
-import static de.jakop.mathetrainer.configuration.Operation.SUBTRACTION;
+import static de.jakop.mathetrainer.common.configuration.Operation.ADDITION;
+import static de.jakop.mathetrainer.common.configuration.Operation.MULTIPLICATION;
+import static de.jakop.mathetrainer.common.configuration.Operation.SUBTRACTION;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -41,8 +41,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.configuration.Operation;
+import de.jakop.mathetrainer.calculation.configuration.Configuration;
+import de.jakop.mathetrainer.common.configuration.Operation;
 
 public class ConfigurationPanel extends JPanel {
 

@@ -21,47 +21,43 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.common.logic;
 
-import java.util.List;
+import com.google.common.base.Supplier;
+import com.google.common.eventbus.EventBus;
 
-import com.google.common.collect.Lists;
+public class Controller {
 
-public class Model {
+	private final Model model;
+	private final Supplier<Exercise> generator;
+	private final EventBus eventBus;
 
-	private final List<Exercise> exercises;
-	private Exercise currentExercise;
-	private long correct;
-	private long totalSeconds;
-
-	public Model() {
-		exercises = Lists.newArrayList();
+	public Controller(final Model model, final Supplier<Exercise> generator, final EventBus eventBus) {
+		this.model = model;
+		this.generator = generator;
+		this.eventBus = eventBus;
 	}
 
-	public Exercise getCurrentExercise() {
-		return currentExercise;
+	public void solve(final String solution) {
+		final Exercise exercise = model.getCurrentExercise();
+		exercise.getStopwatch().stop();
+		exercise.setSolution(solution);
+		recordHistory(exercise);
+		nextExercise();
 	}
 
-	void setCurrentExercise(final Exercise currentExercise) {
-		this.currentExercise = currentExercise;
+	public void nextExercise() {
+		final Exercise exercise = generator.get();
+		model.setCurrentExercise(exercise);
+		eventBus.post(new NewExerciseEvent(exercise));
+		exercise.getStopwatch().start();
 	}
 
-	void addExercise(final Exercise exercise) {
-		exercises.add(exercise);
-		totalSeconds += exercise.getSolutionTimeInSeconds();
-		if (exercise.isCorrect()) {
-			correct++;
+	public void recordHistory(final Exercise exercise) {
+		model.addExercise(exercise);
+		eventBus.post(new SolutionEvent(exercise));
+		if (model.getExercisesCount() % 10 == 0) {
+			eventBus.post(new StatisticsEvent(model.getStatistics()));
 		}
 	}
-
-	public long getExercisesCount() {
-		return exercises.size();
-	}
-
-	public String getStatistics() {
-		final int count = exercises.size();
-		final double percentage = (double) correct / (double) count * 100;
-		return String.format("%d Aufgaben bearbeitet, %d korrekt (%f)%%, %d:%02d:%02d%n", count, correct, percentage, totalSeconds / 3600, totalSeconds % 3600 / 60, totalSeconds % 60);
-	}
-
 }

@@ -21,42 +21,40 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.common.ui;
 
-import com.google.common.eventbus.EventBus;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-public class Controller {
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-	private final Model model;
-	private final ExerciseGenerator generator;
-	private final EventBus eventBus;
+import de.jakop.mathetrainer.common.logic.Controller;
+import de.jakop.mathetrainer.common.logic.Model;
 
-	public Controller(final Model model, final ExerciseGenerator generator, final EventBus eventBus) {
-		this.model = model;
-		this.generator = generator;
-		this.eventBus = eventBus;
+public class ApplicationFrame extends JFrame {
+
+	private static final long serialVersionUID = 3549123919945092574L;
+
+	public ApplicationFrame(final JPanel configurationPanel, final Model model, final Controller controller, final InputPanel inputPanel, final HistoryPanel historyPanel) {
+
+		setLayout(new GridBagLayout());
+		final GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0);
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weighty = 0.0;
+		getContentPane().add(configurationPanel, gbc);
+		gbc.gridy++;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
+		getContentPane().add(historyPanel, gbc);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridy++;
+		gbc.weighty = 0.0;
+		getContentPane().add(inputPanel, gbc);
+
+		getRootPane().setDefaultButton(inputPanel.getSubmitButton());
 	}
 
-	public void solve(final String solution) {
-		final Exercise exercise = model.getCurrentExercise();
-		exercise.getStopwatch().stop();
-		exercise.setSolution(solution);
-		recordHistory(exercise);
-		nextExercise();
-	}
-
-	public void nextExercise() {
-		final Exercise exercise = generator.get();
-		model.setCurrentExercise(exercise);
-		eventBus.post(new NewExerciseEvent(exercise));
-		exercise.getStopwatch().start();
-	}
-
-	public void recordHistory(final Exercise exercise) {
-		model.addExercise(exercise);
-		eventBus.post(new SolutionEvent(exercise));
-		if (model.getExercisesCount() % 10 == 0) {
-			eventBus.post(new StatisticsEvent(model.getStatistics()));
-		}
-	}
 }

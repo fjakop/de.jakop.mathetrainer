@@ -21,17 +21,41 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.common.configuration;
 
-public class NewExerciseEvent {
+import java.awt.Font;
 
-	private final Exercise exercise;
+public class Configuration {
 
-	public NewExerciseEvent(final Exercise exercise) {
-		this.exercise = exercise;
+	public static final float FONT_SIZE = 32.0f;
+	public static final Font HISTORY_FONT = new Font("Courier", Font.PLAIN, 14);
+
+	private static final String OPERAND_COUNT = "operand.count";
+	private static final String OPERAND_MAXVALUE = "operand.maxvalue";
+
+	private int operandMaxvalue;
+	private int operandCount;
+
+	public final int getOperandCount() {
+		if (operandCount == 0) {
+			operandCount = Integer.valueOf(System.getProperty(OPERAND_COUNT, "2"));
+		}
+		return operandCount;
 	}
 
-	public Exercise getExercise() {
-		return exercise;
+	public final void setOperandCount(final int value) {
+		operandCount = value;
 	}
+
+	public final int getOperandMaxValue() {
+		if (operandMaxvalue == 0) {
+			operandMaxvalue = Integer.valueOf(System.getProperty(OPERAND_MAXVALUE, "10"));
+		}
+		return operandMaxvalue;
+	}
+
+	public final void setOperandMaxValue(final int value) {
+		operandMaxvalue = value;
+	}
+
 }

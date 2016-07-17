@@ -39,6 +39,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>de.andrena.tools.macker</groupId>
+				<artifactId>macker-maven-plugin</artifactId>
+				<version>1.0.3-tolina-2</version>
+				<configuration>
+					<rule>macker.xml</rule>
+				</configuration>
+				<executions>
+					<execution>
+						<id>macker-default</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>macker-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

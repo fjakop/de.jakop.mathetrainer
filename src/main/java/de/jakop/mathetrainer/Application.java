@@ -23,30 +23,42 @@
 
 package de.jakop.mathetrainer;
 
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import com.google.common.base.Supplier;
 import com.google.common.eventbus.EventBus;
 
-import de.jakop.mathetrainer.configuration.Configuration;
-import de.jakop.mathetrainer.logic.Controller;
-import de.jakop.mathetrainer.logic.ExerciseGenerator;
-import de.jakop.mathetrainer.logic.Model;
-import de.jakop.mathetrainer.ui.ApplicationFrame;
-import de.jakop.mathetrainer.ui.HistoryPanel;
-import de.jakop.mathetrainer.ui.InputPanel;
+import de.jakop.mathetrainer.common.ObjectFactory;
+import de.jakop.mathetrainer.common.configuration.Configuration;
+import de.jakop.mathetrainer.common.logic.Controller;
+import de.jakop.mathetrainer.common.logic.Exercise;
+import de.jakop.mathetrainer.common.logic.Model;
+import de.jakop.mathetrainer.common.ui.ApplicationFrame;
+import de.jakop.mathetrainer.common.ui.HistoryPanel;
+import de.jakop.mathetrainer.common.ui.InputPanel;
 
 public class Application {
 
 	public Application() {
-		final Configuration configuration = new Configuration();
-		final ExerciseGenerator generator = new ExerciseGenerator(configuration);
+		final String mode = System.getProperty("mode", "calculation");
+		final ObjectFactory factory;
+		try {
+			factory = (ObjectFactory) Class.forName("de.jakop.mathetrainer." + mode + ".ObjectFactory").newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new RuntimeException(String.format("Mode '%s' is unsupported", mode), e);
+		}
+
+		final Configuration configuration = factory.getConfiguration();
+		final Supplier<Exercise> generator = factory.getExerciseGenerator();
 		final Model model = new Model();
 		final EventBus eventBus = new EventBus();
 		final Controller controller = new Controller(model, generator, eventBus);
 
 		final HistoryPanel historyPanel = new HistoryPanel(configuration);
 		final InputPanel inputPanel = new InputPanel(controller);
-		final ApplicationFrame applicationFrame = new ApplicationFrame(configuration, model, controller, inputPanel, historyPanel);
+		final JPanel configurationPanel = factory.getConfigurationPanel();
+		final ApplicationFrame applicationFrame = new ApplicationFrame(configurationPanel, model, controller, inputPanel, historyPanel);
 
 		eventBus.register(historyPanel);
 		eventBus.register(inputPanel);
@@ -59,7 +71,7 @@ public class Application {
 		applicationFrame.setVisible(true);
 	}
 
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws Exception {
 		new Application();
 	}
 }

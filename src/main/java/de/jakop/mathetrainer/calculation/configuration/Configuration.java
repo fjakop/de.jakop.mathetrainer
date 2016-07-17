@@ -21,25 +21,21 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.configuration;
+package de.jakop.mathetrainer.calculation.configuration;
 
-import static de.jakop.mathetrainer.configuration.Operation.ADDITION;
-import static de.jakop.mathetrainer.configuration.Operation.MULTIPLICATION;
-import static de.jakop.mathetrainer.configuration.Operation.SUBTRACTION;
+import static de.jakop.mathetrainer.common.configuration.Operation.ADDITION;
+import static de.jakop.mathetrainer.common.configuration.Operation.MULTIPLICATION;
+import static de.jakop.mathetrainer.common.configuration.Operation.SUBTRACTION;
 
-import java.awt.Font;
 import java.util.Collection;
 
 import com.google.common.collect.Sets;
 
-public class Configuration {
+import de.jakop.mathetrainer.common.configuration.Operation;
 
-	public static final float FONT_SIZE = 32.0f;
-	public static final Font HISTORY_FONT = new Font("Courier", Font.PLAIN, 14);
+public class Configuration extends de.jakop.mathetrainer.common.configuration.Configuration {
 
 	private final Collection<Operation> modes;
-	private int operandMaxvalue;
-	private int operandCount;
 
 	public Configuration() {
 		modes = Sets.newHashSet(ADDITION, SUBTRACTION, MULTIPLICATION);
@@ -48,29 +44,6 @@ public class Configuration {
 	public Operation[] getOperationModes() {
 		return modes.toArray(new Operation[0]);
 	}
-
-	public int getOperandCount() {
-		if (operandCount == 0) {
-			operandCount = Integer.valueOf(System.getProperty("operand.count", "2"));
-		}
-		return operandCount;
-	}
-
-	public void setOperandCount(final int value) {
-		operandCount = value;
-	}
-
-	public int getOperandMaxValue() {
-		if (operandMaxvalue == 0) {
-			operandMaxvalue = Integer.valueOf(System.getProperty("operand.maxvalue", "10"));
-		}
-		return operandMaxvalue;
-	}
-
-	public void setOperandMaxValue(final int value) {
-		operandMaxvalue = value;
-	}
-
 
 	public void enableOperation(final Operation operator) {
 		modes.add(operator);

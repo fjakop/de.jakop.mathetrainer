@@ -21,17 +21,47 @@
  * SOFTWARE.
  *******************************************************************************/
 
-package de.jakop.mathetrainer.logic;
+package de.jakop.mathetrainer.common.logic;
 
-public class SolutionEvent {
+import java.util.List;
 
-	private final Exercise exercise;
+import com.google.common.collect.Lists;
 
-	public SolutionEvent(final Exercise exercise) {
-		this.exercise = exercise;
+public class Model {
+
+	private final List<Exercise> exercises;
+	private Exercise currentExercise;
+	private long correct;
+	private long totalSeconds;
+
+	public Model() {
+		exercises = Lists.newArrayList();
 	}
 
-	public Exercise getExercise() {
-		return exercise;
+	public Exercise getCurrentExercise() {
+		return currentExercise;
 	}
+
+	void setCurrentExercise(final Exercise currentExercise) {
+		this.currentExercise = currentExercise;
+	}
+
+	void addExercise(final Exercise exercise) {
+		exercises.add(exercise);
+		totalSeconds += exercise.getSolutionTimeInSeconds();
+		if (exercise.isCorrect()) {
+			correct++;
+		}
+	}
+
+	public long getExercisesCount() {
+		return exercises.size();
+	}
+
+	public String getStatistics() {
+		final int count = exercises.size();
+		final double percentage = (double) correct / (double) count * 100;
+		return String.format("%d Aufgaben bearbeitet, %d korrekt (%f)%%, %d:%02d:%02d%n", count, correct, percentage, totalSeconds / 3600, totalSeconds % 3600 / 60, totalSeconds % 60);
+	}
+
 }
